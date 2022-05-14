@@ -23,6 +23,7 @@ dependencies:
   http:
   #CachedNetwork
   cached_network_image:
+  smooth_page_indicator:
 
 dev_dependencies:
   flutter_test:

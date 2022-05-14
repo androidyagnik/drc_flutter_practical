@@ -8,6 +8,7 @@ import 'package:drc_practical/pages/home/home_controller.dart';
 import 'package:drc_practical/widgets/image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
@@ -17,31 +18,41 @@ class HomeView extends GetView<HomeController> {
     // TODO: implement build
     return Scaffold(
       backgroundColor: colorWhite,
-      body: Obx(() =>
-      controller.isAPICall.value
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: colorWhite,
+        title: Text(
+          "Annabelle",
+          style:
+              AppText.textMedium.copyWith(color: colorPink, fontSize: font_18),
+        ),
+        elevation: 0.0,
+      ),
+      body: Obx(() => controller.isAPICall.value
           ? const Center(
-        child: CircularProgressIndicator(),
-      )
+              child: CircularProgressIndicator(),
+            )
           : (controller.homeResponse.value.status ?? "") == "200"
-          ? SingleChildScrollView(
-        child: Column(
-          children: [
-            widgetBannerSlider().marginOnly(top: 70.0),
-            widgetBestSeller().marginOnly(top: size_20),
-            widgetOfferItemBanner(),
-            widgetSeeMoreCategories(),
-            widgetProductWithCategory(),
-            widgetShopByBrands()
-          ],
-        ),
-      )
-          : Center(
-        child: Text(
-          lblSomethingWentWrong,
-          style: AppText.textBold
-              .copyWith(color: colorPink, fontSize: size_18),
-        ),
-      )),
+              ? SingleChildScrollView(
+                  padding: const EdgeInsets.only(bottom: size_30),
+                  child: Column(
+                    children: [
+                      widgetBannerSlider(),
+                      widgetBestSeller().marginOnly(top: size_20),
+                      widgetOfferItemBanner(),
+                      widgetSeeMoreCategories(),
+                      widgetProductWithCategory(),
+                      widgetShopByBrands()
+                    ],
+                  ),
+                )
+              : Center(
+                  child: Text(
+                    lblSomethingWentWrong,
+                    style: AppText.textBold
+                        .copyWith(color: colorPink, fontSize: size_18),
+                  ),
+                )),
     );
   }
 
@@ -49,17 +60,11 @@ class HomeView extends GetView<HomeController> {
     List<Widget> itemWidget = [];
 
     for (BannerSlider slider
-    in controller.homeResponse.value.data?.bannerSlider ?? []) {
+        in controller.homeResponse.value.data?.bannerSlider ?? []) {
       itemWidget.add(getNetworkImage(
         slider.mobileImage ?? "",
-        MediaQuery
-            .of(Get.context!)
-            .size
-            .width,
-        MediaQuery
-            .of(Get.context!)
-            .size
-            .width,
+        MediaQuery.of(Get.context!).size.width,
+        MediaQuery.of(Get.context!).size.width,
       ));
     }
 
@@ -68,12 +73,20 @@ class HomeView extends GetView<HomeController> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: itemWidget,
-            ),
-          )
+          Container(
+            width: MediaQuery.of(Get.context!).size.width,
+            height : MediaQuery.of(Get.context!).size.width,
+            child: PageView(
+
+                /// [PageView.scrollDirection] defaults to [Axis.horizontal].
+                /// Use [Axis.vertical] to scroll vertically.
+                controller: controller.pageController,
+                children: itemWidget),
+          ),
+          SmoothPageIndicator(
+              controller: controller.pageController, // PageController
+              count: itemWidget.length,
+          effect: const ExpandingDotsEffect(),)
         ],
       ),
     );
@@ -82,8 +95,8 @@ class HomeView extends GetView<HomeController> {
   Widget widgetBestSeller() {
     List<Widget> itemWidget = [];
     for (BestsellerListElement itemData
-    in controller.homeResponse.value.data?.bestSeller?.bestsellerList ??
-        []) {
+        in controller.homeResponse.value.data?.bestSeller?.bestsellerList ??
+            []) {
       itemWidget.add(SizedBox(
         width: size_150,
         child: Column(
@@ -128,10 +141,10 @@ class HomeView extends GetView<HomeController> {
             children: [
               Expanded(
                   child: Text(
-                    lblBestSeller,
-                    style: AppText.textBold
-                        .copyWith(color: colorBlack, fontSize: font_18),
-                  )),
+                lblBestSeller,
+                style: AppText.textBold
+                    .copyWith(color: colorBlack, fontSize: font_18),
+              )),
               Text(lblSeeAll,
                   style: AppText.textRegular
                       .copyWith(color: colorPink, fontSize: font_16))
@@ -163,12 +176,9 @@ class HomeView extends GetView<HomeController> {
         controller.homeResponse.value.data?.offerItemsBanner ?? [];
     for (OfferItemsBanner banner in copyList) {
       itemWidget.add(ClipRRect(
-          borderRadius: BorderRadius.circular(size_10),
-          child:
-          getNetworkImage(banner.bannerImage ?? "", (MediaQuery
-              .of(Get.context!)
-              .size
-              .width - size_40), size_150),
+        borderRadius: BorderRadius.circular(size_10),
+        child: getNetworkImage(banner.bannerImage ?? "",
+            (MediaQuery.of(Get.context!).size.width - size_40), size_150),
       ).marginOnly(
           right: copyList.indexOf(banner) == (copyList.length - 1)
               ? size_0
@@ -195,7 +205,7 @@ class HomeView extends GetView<HomeController> {
             lblSeeMoreCategories,
             textAlign: TextAlign.left,
             style:
-            AppText.textBold.copyWith(color: colorBlack, fontSize: font_18),
+                AppText.textBold.copyWith(color: colorBlack, fontSize: font_18),
           ).paddingOnly(left: size_20),
           itemWidgetSeeMoreCategories()
         ],
@@ -232,7 +242,7 @@ class HomeView extends GetView<HomeController> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(size_40),
                     child:
-                    getNetworkImage(category.image ?? "", size_80, size_80),
+                        getNetworkImage(category.image ?? "", size_80, size_80),
                   )
                 ],
               ),
@@ -266,7 +276,7 @@ class HomeView extends GetView<HomeController> {
   Widget widgetProductWithCategory() {
     List<Widget> itemWidget = [];
     for (BestsellerListElement itemData
-    in controller.homeResponse.value.data?.muumyMeCategory?.list ?? []) {
+        in controller.homeResponse.value.data?.muumyMeCategory?.list ?? []) {
       itemWidget.add(SizedBox(
         width: size_150,
         child: Column(
@@ -309,12 +319,12 @@ class HomeView extends GetView<HomeController> {
             children: [
               Expanded(
                   child: Text(
-                    controller.homeResponse.value.data?.muumyMeCategory
+                controller.homeResponse.value.data?.muumyMeCategory
                         ?.categoryName ??
-                        "N/A",
-                    style: AppText.textBold
-                        .copyWith(color: colorBlack, fontSize: font_18),
-                  )),
+                    "N/A",
+                style: AppText.textBold
+                    .copyWith(color: colorBlack, fontSize: font_18),
+              )),
               Text(lblSeeAll,
                   style: AppText.textRegular
                       .copyWith(color: colorPink, fontSize: font_16))
@@ -341,7 +351,7 @@ class HomeView extends GetView<HomeController> {
   Widget widgetShopByBrands() {
     List<Widget> itemWidget = [];
     for (ShopByBrand brand
-    in controller.homeResponse.value.data?.shopByBrand ?? []) {
+        in controller.homeResponse.value.data?.shopByBrand ?? []) {
       itemWidget.add(
         Container(
           width: size_100,
@@ -355,9 +365,9 @@ class HomeView extends GetView<HomeController> {
                 fit: BoxFit.fill,
               ),
               Align(
-                alignment: Alignment.center,
-                child:getNetworkImage(brand.image??"", size_60, size_60,fit: BoxFit.contain)
-              ),
+                  alignment: Alignment.center,
+                  child: getNetworkImage(brand.image ?? "", size_60, size_60,
+                      fit: BoxFit.contain)),
             ],
           ),
         ).marginOnly(right: size_20),
@@ -372,7 +382,7 @@ class HomeView extends GetView<HomeController> {
           lblShopByBrand,
           textAlign: TextAlign.left,
           style:
-          AppText.textBold.copyWith(color: colorBlack, fontSize: font_18),
+              AppText.textBold.copyWith(color: colorBlack, fontSize: font_18),
         ).paddingOnly(left: size_20),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
