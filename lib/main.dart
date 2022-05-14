@@ -3,6 +3,7 @@ import 'package:drc_practical/constants/strings.dart';
 import 'package:drc_practical/pages/home/home_binding.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'routes/app_pages.dart';
 
@@ -21,4 +22,14 @@ void main() {
       ),
     ),
   );
+}
+
+
+Future<bool> checkConnectivity() async {
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    return false;
+  } else {
+    return true;
+  }
 }

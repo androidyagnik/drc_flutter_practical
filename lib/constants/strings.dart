@@ -4,3 +4,4 @@ const String lblSeeAll = "See all";
 const String lblAvailable = "Available";
 const String lblSeeMoreCategories = "See More Categories";
 const String lblShopByBrand = "Shop By Brand";
+const String lblSomethingWentWrong = "Something Went Wrong";

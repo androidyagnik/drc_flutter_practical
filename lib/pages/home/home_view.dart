@@ -15,18 +15,30 @@ class HomeView extends GetView<HomeController> {
     // TODO: implement build
     return Scaffold(
       backgroundColor: colorWhite,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            widgetBannerSlider(),
-            widgetBestSeller().marginOnly(top: size_150),
-            widgetOfferItemBanner(),
-            widgetSeeMoreCategories(),
-            widgetProductWithCategory(),
-            widgetShopByBrands()
-          ],
-        ),
-      ),
+      body: Obx(() => controller.isAPICall.value
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : (controller.homeResponse.value.status ?? "") == "200"
+              ? SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      widgetBannerSlider(),
+                      widgetBestSeller().marginOnly(top: size_150),
+                      widgetOfferItemBanner(),
+                      widgetSeeMoreCategories(),
+                      widgetProductWithCategory(),
+                      widgetShopByBrands()
+                    ],
+                  ),
+                )
+              : Center(
+                  child: Text(
+                    lblSomethingWentWrong,
+                    style: AppText.textBold
+                        .copyWith(color: colorPink, fontSize: size_18),
+                  ),
+                )),
     );
   }
 
@@ -254,8 +266,8 @@ class HomeView extends GetView<HomeController> {
     }
 
     return Container(
-      decoration: BoxDecoration(color: colorLightGrey),
-      padding: EdgeInsets.all(size_20),
+      decoration: const BoxDecoration(color: colorLightGrey),
+      padding: const EdgeInsets.all(size_20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -301,7 +313,12 @@ class HomeView extends GetView<HomeController> {
           height: size_100,
           child: Stack(
             children: [
-              Image.asset(bgBrandHome,width: size_100,height: size_100,fit: BoxFit.fill,),
+              Image.asset(
+                bgBrandHome,
+                width: size_100,
+                height: size_100,
+                fit: BoxFit.fill,
+              ),
               Align(
                 alignment: Alignment.center,
                 child: Container(
