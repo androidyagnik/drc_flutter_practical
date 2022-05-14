@@ -1,3 +1,4 @@
+import 'package:drc_practical/apiservice/model/home_page_response_model.dart';
 import 'package:drc_practical/constants/app_colors.dart';
 import 'package:drc_practical/constants/app_images.dart';
 import 'package:drc_practical/constants/app_size.dart';
@@ -48,7 +49,9 @@ class HomeView extends GetView<HomeController> {
 
   Widget widgetBestSeller() {
     List<Widget> itemWidget = [];
-    for (int i = 0; i < 20; i++) {
+    for (BestsellerListElement itemData
+        in controller.homeResponse.value.data?.bestSeller?.bestsellerList ??
+            []) {
       itemWidget.add(SizedBox(
         width: size_150,
         child: Column(
@@ -65,7 +68,7 @@ class HomeView extends GetView<HomeController> {
                   .copyWith(color: Colors.grey, fontSize: font_16),
             ).marginOnly(top: size_5),
             Text(
-              "Item Name",
+              itemData.name ?? "N/A",
               style: AppText.textBold
                   .copyWith(color: colorBlack, fontSize: font_18),
               softWrap: true,
@@ -73,7 +76,7 @@ class HomeView extends GetView<HomeController> {
               maxLines: 2,
             ).marginOnly(top: size_3),
             Text(
-              "AED 12.0",
+              "${itemData.currencyCode ?? ""} ${itemData.price ?? "0.0"}",
               style: AppText.textBold
                   .copyWith(color: colorPink, fontSize: font_16),
             ).marginOnly(top: size_12),
@@ -127,8 +130,9 @@ class HomeView extends GetView<HomeController> {
 
   Widget widgetOfferItemBanner() {
     List<Widget> itemWidget = [];
-
-    for (int i = 0; i < 10; i++) {
+    List<OfferItemsBanner> copyList =
+        controller.homeResponse.value.data?.offerItemsBanner ?? [];
+    for (OfferItemsBanner banner in copyList) {
       itemWidget.add(ClipRRect(
         child: Container(
           width: (MediaQuery.of(Get.context!).size.width - size_40),
@@ -137,7 +141,10 @@ class HomeView extends GetView<HomeController> {
               color: colorLightPink,
               borderRadius: BorderRadius.circular(size_10)),
         ),
-      ).marginOnly(right: i == 9 ? size_0 : size_20));
+      ).marginOnly(
+          right: copyList.indexOf(banner) == (copyList.length - 1)
+              ? size_0
+              : size_20));
     }
 
     return SingleChildScrollView(
@@ -170,7 +177,9 @@ class HomeView extends GetView<HomeController> {
 
   Widget itemWidgetSeeMoreCategories() {
     List<Widget> itemWidget = [];
-    for (int i = 0; i < 10; i++) {
+    List<SeeMoreCategory> copyList =
+        controller.homeResponse.value.data?.seeMoreCategories ?? [];
+    for (SeeMoreCategory category in copyList) {
       itemWidget.add(Container(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -206,7 +215,7 @@ class HomeView extends GetView<HomeController> {
             Container(
               width: size_90,
               child: Text(
-                "Category Name",
+                category.name ?? "N/A",
                 maxLines: 2,
                 softWrap: true,
                 textAlign: TextAlign.center,
@@ -215,7 +224,7 @@ class HomeView extends GetView<HomeController> {
               ).marginOnly(top: size_10),
             )
           ],
-        ).marginOnly(right: i == 9 ? size_0 : size_20),
+        ).marginOnly(right: size_20),
       ));
     }
 
@@ -231,7 +240,8 @@ class HomeView extends GetView<HomeController> {
 
   Widget widgetProductWithCategory() {
     List<Widget> itemWidget = [];
-    for (int i = 0; i < 20; i++) {
+    for (BestsellerListElement itemData
+        in controller.homeResponse.value.data?.muumyMeCategory?.list ?? []) {
       itemWidget.add(SizedBox(
         width: size_150,
         child: Column(
@@ -248,7 +258,7 @@ class HomeView extends GetView<HomeController> {
                   .copyWith(color: Colors.grey, fontSize: font_16),
             ).marginOnly(top: size_5),
             Text(
-              "Item Name",
+              itemData.name ?? "N/A",
               style: AppText.textBold
                   .copyWith(color: colorBlack, fontSize: font_18),
               softWrap: true,
@@ -256,7 +266,7 @@ class HomeView extends GetView<HomeController> {
               maxLines: 2,
             ).marginOnly(top: size_3),
             Text(
-              "AED 12.0",
+              "${itemData.currencyCode ?? ""} ${itemData.price ?? "0.0"}",
               style: AppText.textBold
                   .copyWith(color: colorPink, fontSize: font_16),
             ).marginOnly(top: size_12),
@@ -277,7 +287,9 @@ class HomeView extends GetView<HomeController> {
             children: [
               Expanded(
                   child: Text(
-                lblBestSeller,
+                controller.homeResponse.value.data?.muumyMeCategory
+                        ?.categoryName ??
+                    "N/A",
                 style: AppText.textBold
                     .copyWith(color: colorBlack, fontSize: font_18),
               )),
@@ -306,7 +318,8 @@ class HomeView extends GetView<HomeController> {
 
   Widget widgetShopByBrands() {
     List<Widget> itemWidget = [];
-    for (int i = 0; i < 10; i++) {
+    for (ShopByBrand brand
+        in controller.homeResponse.value.data?.shopByBrand ?? []) {
       itemWidget.add(
         Container(
           width: size_100,
@@ -332,7 +345,7 @@ class HomeView extends GetView<HomeController> {
               ),
             ],
           ),
-        ).marginOnly(right: i == 9 ? size_0 : size_20),
+        ).marginOnly(right: size_20),
       );
     }
 

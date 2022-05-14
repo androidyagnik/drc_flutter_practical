@@ -6,7 +6,7 @@ import 'package:drc_practical/main.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
-  final isAPICall = false.obs;
+  final isAPICall = true.obs;
   final homeResponse = HomePageResponseModel().obs;
 
   @override
@@ -31,6 +31,8 @@ class HomeController extends GetxController {
           homeResponse.value =
               homePageResponseModelFromJson(jsonEncode(response)).first;
         });
+      }else{
+        isAPICall.value = false;
       }
     });
   }
