@@ -57,3 +57,5 @@ const double size_80 = 80;
 const double size_90 = 90;
 const double size_150 = 150;
 const double size_200 = 200;
+const double size_250 = 250;
+const double size_300 = 300;
