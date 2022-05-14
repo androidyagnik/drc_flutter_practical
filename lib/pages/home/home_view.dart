@@ -75,18 +75,21 @@ class HomeView extends GetView<HomeController> {
         children: [
           Container(
             width: MediaQuery.of(Get.context!).size.width,
-            height : MediaQuery.of(Get.context!).size.width,
+            height: MediaQuery.of(Get.context!).size.width,
             child: PageView(
-
-                /// [PageView.scrollDirection] defaults to [Axis.horizontal].
-                /// Use [Axis.vertical] to scroll vertically.
-                controller: controller.pageController,
-                children: itemWidget),
+                controller: controller.pageController, children: itemWidget),
           ),
           SmoothPageIndicator(
-              controller: controller.pageController, // PageController
-              count: itemWidget.length,
-          effect: const ExpandingDotsEffect(),)
+            controller: controller.pageController, // PageController
+            count: itemWidget.length,
+            effect: const ExpandingDotsEffect(
+              dotWidth: size_10,
+              activeDotColor: colorPink,
+              dotColor: colorLightGrey,
+              dotHeight: size_5,
+              strokeWidth: size_15
+            ),
+          ).marginOnly(top: size_10)
         ],
       ),
     );
