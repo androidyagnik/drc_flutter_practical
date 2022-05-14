@@ -55,3 +55,5 @@ const double size_70 = 70;
 const double size_74 = 74;
 const double size_80 = 80;
 const double size_90 = 90;
+const double size_150 = 150;
+const double size_200 = 200;
